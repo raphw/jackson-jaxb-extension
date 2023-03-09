@@ -1,8 +1,10 @@
-=== Extensions for JAXB when using Jackson
+Extensions for JAXB when using Jackson
+===
 
 This library offers two extensions for Jackson's support of the official JAXB annotations. This is to create more consistent XML or JSON, what currently relies to some degree on the configuration of XJB and of custom configurations set in Jackson. This library contains a version for both the *javax* and *jakarta* namespace of JAXB.
 
-==== `XmlElementWrapper`
+`XmlElementWrapper`
+====
 
 `XmlElementWrapperModule` offers support for the `XmlElementWrapper` annotation when for example the XEW plugin is used for creating object representations. The annotation allows to avoid intermediate objects for wrapped lists of elements. For example, the following class would create an XML where a list of `value` elements is wrapped by a `values` tag. 
 
@@ -31,7 +33,8 @@ Depending on the chosen representation, Jackson would then render two different 
 
 Jackson cannot marshal or unmarshal these representation to each other, despite the JAXB specification defining them to represent an identical structure. With the `XmlElementWrapperModule`, this capability is added to Jackson. If `serialization` is set to `true`, Jackson will always add the wrapper element to the JSON when creating a serialized representation. Without it, only deserializing capabilities are added such that both representations can be read.
 
-==== `XmlSeeAlso`
+`XmlSeeAlso`
+====
 
 The XML standard defines a mechanism to represent polymorphic types which is not present in JSON. The `XmlSeeAlso` annotation is however not supported by Jackson where this support can be added by registering the `XmlElementWrapperModule`. 
 
