@@ -19,11 +19,14 @@ public class JakartaXmlElementWrapperModule extends XmlElementWrapperModule {
             }
             String namespace = null;
             if (annotation.namespace().equals(DEFAULT)) {
-                Package location = member.getDeclaringClass().getPackage();
-                if (location != null) {
-                    XmlSchema schema = location.getAnnotation(XmlSchema.class);
-                    if (schema != null && !schema.namespace().isEmpty()) {
-                        namespace = schema.namespace();
+                Class<?> declaringClass = member.getDeclaringClass();
+                if (declaringClass != null) {
+                    Package location = declaringClass.getPackage();
+                    if (location != null) {
+                        XmlSchema schema = location.getAnnotation(XmlSchema.class);
+                        if (schema != null && !schema.namespace().isEmpty()) {
+                            namespace = schema.namespace();
+                        }
                     }
                 }
             } else {
