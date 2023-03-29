@@ -14,7 +14,7 @@ public class PropertyNameParser implements Function<String, PropertyName> {
             if (index == -1) {
                 throw new IllegalStateException();
             }
-            name = value.substring(index);
+            name = value.substring(index + 1);
             namespace = value.substring(1, index);
         } else {
             name = value;
