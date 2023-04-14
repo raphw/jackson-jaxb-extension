@@ -44,7 +44,7 @@ public class JakartaXmlSeeAlsoModule extends XmlSeeAlsoModule {
                         XmlType info = value.getAnnotation(XmlType.class);
                         String namespace = null;
                         if (info == null || info.namespace().equals(DEFAULT)) {
-                            Package location = value.getDeclaringClass().getPackage();
+                            Package location = value.getPackage();
                             if (location != null) {
                                 XmlSchema schema = location.getAnnotation(XmlSchema.class);
                                 if (schema != null && !schema.namespace().isEmpty()) {
