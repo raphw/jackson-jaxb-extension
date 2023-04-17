@@ -11,10 +11,12 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
 import com.fasterxml.jackson.databind.introspect.AnnotatedClassResolver;
 import com.fasterxml.jackson.databind.introspect.BasicBeanDescription;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class XmlSeeAlsoDeserializer extends AbstractDeserializer {
@@ -25,18 +27,22 @@ public class XmlSeeAlsoDeserializer extends AbstractDeserializer {
 
     private final Function<String, PropertyName> resolver;
 
+    private final BiFunction<JsonParser, String, String> normalizer;
+
     private final Map<PropertyName, Class<?>> types;
 
     XmlSeeAlsoDeserializer(
             BeanDescription description,
             PropertyName property,
             Function<String, PropertyName> resolver,
+            BiFunction<JsonParser, String, String> normalizer,
             Map<PropertyName, Class<?>> types
     ) {
         super(description);
         this.description = description;
         this.property = property;
         this.resolver = resolver;
+        this.normalizer = normalizer;
         this.types = types;
     }
 
@@ -45,7 +51,7 @@ public class XmlSeeAlsoDeserializer extends AbstractDeserializer {
         if (!parser.nextFieldName().equals(property.getSimpleName())) {
             throw new IllegalStateException();
         }
-        PropertyName resolved = resolver.apply(parser.nextTextValue());
+        PropertyName resolved = resolver.apply(normalizer.apply(parser, parser.nextTextValue()));
         Class<?> type = types.get(resolved);
         if (type == null) {
             throw new IllegalStateException("No mapping found for " + resolved + " within " + types.keySet());

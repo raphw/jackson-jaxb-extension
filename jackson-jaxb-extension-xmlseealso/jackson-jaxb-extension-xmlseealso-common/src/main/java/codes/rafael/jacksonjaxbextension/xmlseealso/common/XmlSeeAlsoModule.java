@@ -25,7 +25,7 @@ public abstract class XmlSeeAlsoModule extends SimpleModule {
         super(name);
         boolean supportsXml;
         try {
-            Class.forName("com.fasterxml.jackson.dataformat.xml.ser.XmlBeanSerializer");
+            Class.forName("com.fasterxml.jackson.dataformat.xml.XmlFactory");
             supportsXml = true;
         } catch (ClassNotFoundException e) {
             supportsXml = false;
@@ -49,6 +49,8 @@ public abstract class XmlSeeAlsoModule extends SimpleModule {
         setSerializerModifier(supportsXml
                 ? new XmlSeeAlsoSerializerModifierWithXmlSupport(property, attribute, serializationResolver, toProperties)
                 : new XmlSeeAlsoSerializerModifier(property, serializationResolver, toProperties));
-        setDeserializerModifier(new XmlSeeAlsoDeserializerModifier(property, deserializationResolver, toTypes));
+        setDeserializerModifier(supportsXml
+                ? new XmlSeeAlsoDeserializerModifierWithXmlSupport(property, deserializationResolver, toTypes)
+                : new XmlSeeAlsoDeserializerModifier(property, deserializationResolver, toTypes));
     }
 }

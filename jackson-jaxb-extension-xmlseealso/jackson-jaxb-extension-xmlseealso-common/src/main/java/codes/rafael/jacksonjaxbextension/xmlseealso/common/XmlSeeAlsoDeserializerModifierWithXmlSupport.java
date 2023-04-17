@@ -1,6 +1,5 @@
 package codes.rafael.jacksonjaxbextension.xmlseealso.common;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -9,10 +8,9 @@ import com.fasterxml.jackson.databind.deser.AbstractDeserializer;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
-class XmlSeeAlsoDeserializerModifier extends BeanDeserializerModifier {
+class XmlSeeAlsoDeserializerModifierWithXmlSupport extends BeanDeserializerModifier {
 
     private final PropertyName property;
 
@@ -20,7 +18,7 @@ class XmlSeeAlsoDeserializerModifier extends BeanDeserializerModifier {
 
     private final Function<BeanDescription, Map<PropertyName, Class<?>>> toTypes;
 
-    XmlSeeAlsoDeserializerModifier(PropertyName property, Function<String, PropertyName> resolver, Function<BeanDescription, Map<PropertyName, Class<?>>> toTypes) {
+    XmlSeeAlsoDeserializerModifierWithXmlSupport(PropertyName property, Function<String, PropertyName> resolver, Function<BeanDescription, Map<PropertyName, Class<?>>> toTypes) {
         this.property = property;
         this.resolver = resolver;
         this.toTypes = toTypes;
@@ -31,7 +29,7 @@ class XmlSeeAlsoDeserializerModifier extends BeanDeserializerModifier {
         if (deserializer instanceof AbstractDeserializer) {
             Map<PropertyName, Class<?>> types = toTypes.apply(description);
             if (types != null) {
-                deserializer = new XmlSeeAlsoDeserializer(description, property, resolver, (parser, value) -> value, types);
+                deserializer = new XmlSeeAlsoDeserializer(description, property, resolver, new XmlNamespaceResolver(), types);
             }
         }
         return deserializer;
