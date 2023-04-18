@@ -13,11 +13,14 @@ class XmlNamespaceResolver implements BiFunction<JsonParser, String, String> {
             return value;
         }
         int namespace = value.indexOf(':');
+        if (namespace == -1) {
+            return value;
+        }
         String uri = ((FromXmlParser) parser).getStaxReader().getNamespaceURI(value.substring(0, namespace));
         if (uri == null) {
             return value;
         } else {
-            return uri + ":" + value.substring(namespace + 1);
+            return "{" + uri + "}" + value.substring(namespace + 1);
         }
     }
 }

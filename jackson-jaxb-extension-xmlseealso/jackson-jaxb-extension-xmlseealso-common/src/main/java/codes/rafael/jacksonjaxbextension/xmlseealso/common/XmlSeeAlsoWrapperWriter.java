@@ -36,7 +36,7 @@ class XmlSeeAlsoWrapperWriter extends VirtualBeanPropertyWriter {
     }
 
     @Override
-    protected Object value(Object bean, JsonGenerator generator, SerializerProvider provided) {
+    protected String value(Object bean, JsonGenerator generator, SerializerProvider provided) {
         PropertyName name = types.get(bean.getClass());
         if (name == null) {
             throw new IllegalStateException(bean.getClass() + " is not mapped within " + types.keySet());
