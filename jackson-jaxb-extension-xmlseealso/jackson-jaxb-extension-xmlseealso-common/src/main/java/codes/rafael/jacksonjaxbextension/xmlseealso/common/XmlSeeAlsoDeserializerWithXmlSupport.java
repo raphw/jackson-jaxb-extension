@@ -11,13 +11,14 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
 import com.fasterxml.jackson.databind.introspect.AnnotatedClassResolver;
 import com.fasterxml.jackson.databind.introspect.BasicBeanDescription;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class XmlSeeAlsoDeserializer extends AbstractDeserializer {
+public class XmlSeeAlsoDeserializerWithXmlSupport extends AbstractDeserializer {
 
     private final BeanDescription description;
 
@@ -27,7 +28,7 @@ public class XmlSeeAlsoDeserializer extends AbstractDeserializer {
 
     private final Map<PropertyName, Class<?>> types;
 
-    XmlSeeAlsoDeserializer(
+    XmlSeeAlsoDeserializerWithXmlSupport(
             BeanDescription description,
             PropertyName property,
             Function<String, PropertyName> resolver,
@@ -45,7 +46,23 @@ public class XmlSeeAlsoDeserializer extends AbstractDeserializer {
         if (!parser.nextFieldName().equals(property.getSimpleName())) {
             throw new IllegalStateException();
         }
-        PropertyName resolved = resolver.apply(parser.nextTextValue());
+        PropertyName resolved;
+        String next = parser.nextTextValue();
+        if (parser instanceof FromXmlParser) {
+            int index = next.indexOf(':');
+            if (index == -1) {
+                resolved = new PropertyName(next);
+            } else {
+                String namespace = ((FromXmlParser) parser).getStaxReader().getNamespaceURI(next.substring(0, index));
+                if (namespace == null) {
+                    throw new IllegalStateException("Cannot find namespace for prefix " + next.substring(0, index));
+                } else {
+                    resolved = new PropertyName(next.substring(index + 1), namespace);
+                }
+            }
+        } else {
+            resolved = resolver.apply(next);
+        }
         Class<?> type = types.get(resolved);
         if (type == null) {
             throw new IllegalStateException("No mapping found for " + resolved + " within " + types.keySet());

@@ -52,7 +52,7 @@ class XmlSeeAlsoSerializerWithXmlSupport extends XmlBeanSerializer {
             System.arraycopy(_props, 0, properties, 1, _props.length);
         }
         JavaType type = config.constructType(String.class);
-        properties[0] = new XmlSeeAlsoWrapperWriter(SimpleBeanPropertyDefinition.construct(
+        properties[0] = new XmlSeeAlsoWrapperWriterWithXmlSupport(SimpleBeanPropertyDefinition.construct(
                 config,
                 new VirtualAnnotatedMember(
                         new TypeResolutionContext.Empty(config.getTypeFactory()),

@@ -31,7 +31,7 @@ class XmlSeeAlsoDeserializerModifier extends BeanDeserializerModifier {
         if (deserializer instanceof AbstractDeserializer) {
             Map<PropertyName, Class<?>> types = toTypes.apply(description);
             if (types != null) {
-                deserializer = new XmlSeeAlsoDeserializer(description, property, resolver, (parser, value) -> value, types);
+                deserializer = new XmlSeeAlsoDeserializer(description, property, resolver, types);
             }
         }
         return deserializer;

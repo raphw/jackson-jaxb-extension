@@ -29,7 +29,7 @@ class XmlSeeAlsoDeserializerModifierWithXmlSupport extends BeanDeserializerModif
         if (deserializer instanceof AbstractDeserializer) {
             Map<PropertyName, Class<?>> types = toTypes.apply(description);
             if (types != null) {
-                deserializer = new XmlSeeAlsoDeserializer(description, property, resolver, new XmlNamespaceResolver(), types);
+                deserializer = new XmlSeeAlsoDeserializerWithXmlSupport(description, property, resolver, types);
             }
         }
         return deserializer;

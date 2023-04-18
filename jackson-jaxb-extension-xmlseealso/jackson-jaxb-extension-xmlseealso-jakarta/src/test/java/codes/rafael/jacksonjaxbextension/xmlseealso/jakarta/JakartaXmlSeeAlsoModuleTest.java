@@ -7,6 +7,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class JakartaXmlSeeAlsoModuleTest {
                 .registerModule(JakartaXmlSeeAlsoModule.ofAtType())
                 .registerModule(new JakartaXmlBindAnnotationModule());
         String json = objectMapper.writeValueAsString(new Wrapper());
-        assertEquals(json, "{\"base\":{\"@type\":\"FirstType\"}}");
+        assertEquals("{\"base\":{\"@type\":\"FirstType\"}}", json);
         assertEquals(First.class, objectMapper.readValue(json, Wrapper.class).getBase().getClass());
     }
 
@@ -34,7 +35,7 @@ public class JakartaXmlSeeAlsoModuleTest {
                 .registerModule(JakartaXmlSeeAlsoModule.ofAtType())
                 .registerModule(new JakartaXmlBindAnnotationModule());
         String json = objectMapper.writeValueAsString(new WrapperWithNamespace());
-        assertEquals(json, "{\"base\":{\"@type\":\"{FirstNamespace}FirstType\"}}");
+        assertEquals("{\"base\":{\"@type\":\"{FirstNamespace}FirstType\"}}", json);
         assertEquals(FirstWithNamespace.class, objectMapper.readValue(json, WrapperWithNamespace.class).getBase().getClass());
     }
 
@@ -44,7 +45,7 @@ public class JakartaXmlSeeAlsoModuleTest {
                 .registerModule(JakartaXmlSeeAlsoModule.ofXsi())
                 .registerModule(new JakartaXmlBindAnnotationModule());
         String xml = objectMapper.writeValueAsString(new Wrapper());
-        assertEquals(xml, "<Wrapper><base xmlns:wstxns1=\"http://www.w3.org/2001/XMLSchema-instance\" wstxns1:type=\"FirstType\"/></Wrapper>");
+        assertEquals("<Wrapper><base xmlns:wstxns1=\"http://www.w3.org/2001/XMLSchema-instance\" wstxns1:type=\"FirstType\"/></Wrapper>", xml);
         assertEquals(First.class, objectMapper.readValue(xml, Wrapper.class).getBase().getClass());
         assertEquals(First.class, JAXBContext.newInstance(Wrapper.class).createUnmarshaller().unmarshal(
                 new StreamSource(new StringReader(xml)),
@@ -58,14 +59,13 @@ public class JakartaXmlSeeAlsoModuleTest {
                 .registerModule(JakartaXmlSeeAlsoModule.ofXsi())
                 .registerModule(new JakartaXmlBindAnnotationModule());
         String xml = objectMapper.writeValueAsString(new WrapperWithNamespace());
-        assertEquals(xml, "<WrapperWithNamespace><base xmlns:wstxns1=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:wstxn2=\"FirstNamespace\" wstxns1:type=\"wstxn2:FirstType\"/></WrapperWithNamespace>");
+        assertEquals("<root><base xmlns:wstxns1=\"FirstNamespace\" xmlns:wstxns2=\"http://www.w3.org/2001/XMLSchema-instance\" wstxns2:type=\"wstxns1:FirstType\"/></root>", xml);
         assertEquals(FirstWithNamespace.class, objectMapper.readValue(xml, WrapperWithNamespace.class).getBase().getClass());
         assertEquals(FirstWithNamespace.class, JAXBContext.newInstance(WrapperWithNamespace.class).createUnmarshaller().unmarshal(
                 new StreamSource(new StringReader(xml)),
                 WrapperWithNamespace.class
         ).getValue().getBase().getClass());
     }
-
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Wrapper {
@@ -91,6 +91,7 @@ public class JakartaXmlSeeAlsoModuleTest {
     @XmlType(name = "SecondType")
     public static class Second extends Base { }
 
+    @XmlRootElement(name = "root")
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class WrapperWithNamespace {
 
