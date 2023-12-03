@@ -36,7 +36,7 @@ Jackson cannot marshal or unmarshal these representation to each other, despite 
 `XmlSeeAlso`
 ====
 
-The XML standard defines a mechanism to represent polymorphic types which is not present in JSON. The `XmlSeeAlso` annotation is however not supported by Jackson where this support can be added by registering the `XmlElementWrapperModule`. 
+The XML standard defines a mechanism to represent polymorphic types which is not present in JSON. The `XmlSeeAlso` annotation is however not supported by Jackson where this support can be added by registering the `XmlSeeAlsoModule`. 
 
 Considering the following structure, any object of `base` could be of either type `First` or `Second`.
 
