@@ -38,29 +38,31 @@ class XmlElementWrapperSerializer extends BeanSerializer {
             return;
         }
         for (int index = 0; index < properties.length; index++) {
-            PropertyName name = resolver.apply(properties[index].getMember());
-            if (name != null) {
-                alive = true;
-                JavaType wrapper = config.constructType(Object.class);
-                BeanSerializerBuilder builder = new BeanSerializerBuilder(description);
-                builder.setFilterId(_propertyFilterId);
-                properties[index] = new XmlElementWrapperWriter(SimpleBeanPropertyDefinition.construct(
-                        config,
-                        new VirtualAnnotatedMember(
-                                description.getClassInfo(),
-                                description.getClassInfo().getRawType(),
-                                name.getSimpleName(),
-                                wrapper
-                        ),
-                        name,
-                        PropertyMetadata.STD_OPTIONAL,
-                        JsonInclude.Include.NON_EMPTY
-                ), description.getClassInfo().getAnnotations(), wrapper, new BeanSerializer(
-                        _beanType,
-                        builder,
-                        filtered ? null : new BeanPropertyWriter[]{properties[index]},
-                        filtered ? new BeanPropertyWriter[]{properties[index]} : null
-                ));
+            if (properties[index] != null) {
+                PropertyName name = resolver.apply(properties[index].getMember());
+                if (name != null) {
+                    alive = true;
+                    JavaType wrapper = config.constructType(Object.class);
+                    BeanSerializerBuilder builder = new BeanSerializerBuilder(description);
+                    builder.setFilterId(_propertyFilterId);
+                    properties[index] = new XmlElementWrapperWriter(SimpleBeanPropertyDefinition.construct(
+                            config,
+                            new VirtualAnnotatedMember(
+                                    description.getClassInfo(),
+                                    description.getClassInfo().getRawType(),
+                                    name.getSimpleName(),
+                                    wrapper
+                            ),
+                            name,
+                            PropertyMetadata.STD_OPTIONAL,
+                            JsonInclude.Include.NON_EMPTY
+                    ), description.getClassInfo().getAnnotations(), wrapper, new BeanSerializer(
+                            _beanType,
+                            builder,
+                            filtered ? null : new BeanPropertyWriter[]{properties[index]},
+                            filtered ? new BeanPropertyWriter[]{properties[index]} : null
+                    ));
+                }
             }
         }
     }

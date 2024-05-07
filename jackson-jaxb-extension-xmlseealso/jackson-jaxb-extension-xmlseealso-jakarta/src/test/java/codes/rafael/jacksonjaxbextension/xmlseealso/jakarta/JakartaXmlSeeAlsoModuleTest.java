@@ -16,6 +16,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class JakartaXmlSeeAlsoModuleTest {
 
@@ -27,6 +28,18 @@ public class JakartaXmlSeeAlsoModuleTest {
         String json = objectMapper.writeValueAsString(new Wrapper());
         assertEquals("{\"base\":{\"@type\":\"FirstType\"}}", json);
         assertEquals(First.class, objectMapper.readValue(json, Wrapper.class).getBase().getClass());
+    }
+
+    @Test
+    public void testXmlSeeAlsoAsJsonNull() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(JakartaXmlSeeAlsoModule.ofAtType())
+                .registerModule(new JakartaXmlBindAnnotationModule());
+        Wrapper wrapper = new Wrapper();
+        wrapper.setBase(null);
+        String json = objectMapper.writeValueAsString(wrapper);
+        assertEquals("{\"base\":null}", json);
+        assertNull(objectMapper.readValue(json, Wrapper.class).getBase());
     }
 
     @Test
