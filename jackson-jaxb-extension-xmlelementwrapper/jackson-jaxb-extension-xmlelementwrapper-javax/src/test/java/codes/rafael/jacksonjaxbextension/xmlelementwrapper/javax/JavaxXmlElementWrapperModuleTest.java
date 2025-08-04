@@ -25,6 +25,18 @@ public class JavaxXmlElementWrapperModuleTest {
                 objectMapper.readValue(jsonWith, WithXewPlugin.class).getValue());
     }
 
+    @Test
+    public void testXmlElementWrapperSerialize() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new JavaxXmlElementWrapperModule(false))
+                .registerModule(new JaxbAnnotationModule());
+        String jsonWith = objectMapper.writeValueAsString(new WithXewPlugin());
+        assertEquals(jsonWith, "{\"value\":[\"foo\",\"bar\"]}");
+        assertEquals(
+                objectMapper.readValue("{\"value\":[\"foo\",\"bar\"]}", WithXewPlugin.class).getValue(),
+                objectMapper.readValue(jsonWith, WithXewPlugin.class).getValue());
+    }
+
     public static class WithXewPlugin {
 
         @XmlElement(name = "value")
