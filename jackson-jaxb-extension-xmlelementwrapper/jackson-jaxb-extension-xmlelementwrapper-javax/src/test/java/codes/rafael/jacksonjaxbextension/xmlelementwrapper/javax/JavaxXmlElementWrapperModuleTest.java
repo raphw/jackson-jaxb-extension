@@ -33,7 +33,7 @@ public class JavaxXmlElementWrapperModuleTest {
         String jsonWith = objectMapper.writeValueAsString(new WithXewPlugin());
         assertEquals(jsonWith, "{\"value\":[\"foo\",\"bar\"]}");
         assertEquals(
-                objectMapper.readValue("{\"value\":[\"foo\",\"bar\"]}", WithXewPlugin.class).getValue(),
+                objectMapper.readValue("{\"values\":{\"value\":[\"foo\",\"bar\"]}}", WithXewPlugin.class).getValue(),
                 objectMapper.readValue(jsonWith, WithXewPlugin.class).getValue());
     }
 
