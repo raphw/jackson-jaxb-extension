@@ -69,7 +69,7 @@ class XmlElementWrapperDeserializer extends BeanDeserializer {
             Object value = delegate == null
                     ? parser.getCodec().readValue(parser, type)
                     : delegate.deserialize(parser, context);
-            if (!parser.nextToken().equals(JsonToken.END_OBJECT)) {
+            if (parser.getLastClearedToken() != JsonToken.END_ARRAY && parser.nextToken() != JsonToken.END_OBJECT) {
                 throw new JsonParseException(parser, "Expected end of object for name: " + name);
             }
             return value;
