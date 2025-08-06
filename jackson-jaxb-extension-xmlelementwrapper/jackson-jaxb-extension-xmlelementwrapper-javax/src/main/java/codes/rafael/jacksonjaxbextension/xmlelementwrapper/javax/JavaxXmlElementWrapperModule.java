@@ -9,11 +9,11 @@ import javax.xml.bind.annotation.XmlSchema;
 public class JavaxXmlElementWrapperModule extends XmlElementWrapperModule {
 
     public JavaxXmlElementWrapperModule() {
-        this(true);
+        this(true, true);
     }
 
-    public JavaxXmlElementWrapperModule(boolean serialization) {
-        super(XmlElementWrapper.class.getName() + "Module", serialization, member -> {
+    public JavaxXmlElementWrapperModule(boolean serialization, boolean deserialization) {
+        super(XmlElementWrapper.class.getName() + "Module", serialization, deserialization, member -> {
             XmlElementWrapper annotation = member.getAnnotation(XmlElementWrapper.class);
             if (annotation == null) {
                 return null;

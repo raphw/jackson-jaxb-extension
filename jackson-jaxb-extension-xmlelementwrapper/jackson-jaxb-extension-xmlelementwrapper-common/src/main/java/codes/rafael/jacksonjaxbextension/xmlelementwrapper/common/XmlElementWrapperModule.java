@@ -10,11 +10,13 @@ public abstract class XmlElementWrapperModule extends SimpleModule {
 
     protected static final String DEFAULT = "##default";
 
-    protected XmlElementWrapperModule(String name, boolean serialization, Function<AnnotatedMember, PropertyName> resolver) {
+    protected XmlElementWrapperModule(String name, boolean serialization, boolean deserialization, Function<AnnotatedMember, PropertyName> resolver) {
         super(name);
         if (serialization) {
             setSerializerModifier(new XmlElementWrapperSerializerModifier(resolver));
         }
-        setDeserializerModifier(new XmlElementWrapperDeserializerModifier(resolver));
+        if (deserialization) {
+            setDeserializerModifier(new XmlElementWrapperDeserializerModifier(resolver));
+        }
     }
 }

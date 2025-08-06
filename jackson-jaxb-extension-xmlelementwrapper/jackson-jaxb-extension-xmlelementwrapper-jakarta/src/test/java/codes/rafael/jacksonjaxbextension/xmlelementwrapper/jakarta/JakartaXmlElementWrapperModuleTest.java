@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -19,11 +20,12 @@ public class JakartaXmlElementWrapperModuleTest {
         ObjectMapper objectMapper = new ObjectMapper()
                 .registerModule(new JakartaXmlElementWrapperModule())
                 .registerModule(new JakartaXmlBindAnnotationModule());
-        String jsonWith = objectMapper.writeValueAsString(WithXewPlugin.of("foo", "bar"));
-        assertEquals(jsonWith, "{\"values\":{\"value\":[\"foo\",\"bar\"]}}");
         assertEquals(
-                objectMapper.readValue("{\"value\":[\"foo\",\"bar\"]}", WithXewPlugin.class).getValue(),
-                objectMapper.readValue(jsonWith, WithXewPlugin.class).getValue());
+                "{\"values\":{\"value\":[\"foo\",\"bar\"]}}",
+                objectMapper.writeValueAsString(WithXewPlugin.of("foo", "bar")));
+        assertEquals(
+                Arrays.asList("foo", "bar"),
+                objectMapper.readValue("{\"values\":{\"value\":[\"foo\",\"bar\"]}}", WithXewPlugin.class).getValue());
     }
 
     @Test
@@ -31,23 +33,25 @@ public class JakartaXmlElementWrapperModuleTest {
         ObjectMapper objectMapper = new ObjectMapper()
                 .registerModule(new JakartaXmlElementWrapperModule())
                 .registerModule(new JakartaXmlBindAnnotationModule());
-        String jsonWith = objectMapper.writeValueAsString(WithXewPlugin.of());
-        assertEquals(jsonWith, "{\"values\":{\"value\":[]}}");
         assertEquals(
-                objectMapper.readValue("{\"value\":[]}", WithXewPlugin.class).getValue(),
-                objectMapper.readValue(jsonWith, WithXewPlugin.class).getValue());
+                "{\"values\":{\"value\":[]}}",
+                objectMapper.writeValueAsString(WithXewPlugin.of()));
+        assertEquals(
+                Collections.emptyList(),
+                objectMapper.readValue("{\"values\":{\"value\":[]}}", WithXewPlugin.class).getValue());
     }
 
     @Test
     public void testXmlElementWrapperSerialize() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper()
-                .registerModule(new JakartaXmlElementWrapperModule(false))
+                .registerModule(new JakartaXmlElementWrapperModule(false, false))
                 .registerModule(new JakartaXmlBindAnnotationModule());
-        String jsonWith = objectMapper.writeValueAsString(WithXewPlugin.of("foo", "bar"));
-        assertEquals(jsonWith, "{\"value\":[\"foo\",\"bar\"]}");
         assertEquals(
-                objectMapper.readValue("{\"values\":{\"value\":[\"foo\",\"bar\"]}}", WithXewPlugin.class).getValue(),
-                objectMapper.readValue(jsonWith, WithXewPlugin.class).getValue());
+                "{\"value\":[\"foo\",\"bar\"]}",
+                objectMapper.writeValueAsString(WithXewPlugin.of("foo", "bar")));
+        assertEquals(
+                Arrays.asList("foo", "bar"),
+                objectMapper.readValue("{\"value\":[\"foo\",\"bar\"]}", WithXewPlugin.class).getValue());
     }
 
     public static class WithXewPlugin {

@@ -8,11 +8,11 @@ import jakarta.xml.bind.annotation.XmlSchema;
 public class JakartaXmlElementWrapperModule extends XmlElementWrapperModule {
 
     public JakartaXmlElementWrapperModule() {
-        this(true);
+        this(true, true);
     }
 
-    public JakartaXmlElementWrapperModule(boolean serialization) {
-        super(XmlElementWrapper.class.getName() + "Module", serialization, member -> {
+    public JakartaXmlElementWrapperModule(boolean serialization, boolean deserialization) {
+        super(XmlElementWrapper.class.getName() + "Module", serialization, deserialization, member -> {
             XmlElementWrapper annotation = member.getAnnotation(XmlElementWrapper.class);
             if (annotation == null) {
                 return null;
