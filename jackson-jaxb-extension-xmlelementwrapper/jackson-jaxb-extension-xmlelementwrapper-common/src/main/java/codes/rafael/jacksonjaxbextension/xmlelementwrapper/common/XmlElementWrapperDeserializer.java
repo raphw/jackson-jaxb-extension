@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.function.Function;
 
 class XmlElementWrapperDeserializer extends BeanDeserializer {
@@ -59,7 +60,10 @@ class XmlElementWrapperDeserializer extends BeanDeserializer {
 
         @Override
         public Object deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-            if (!parser.nextFieldName().equals(name) || !parser.nextToken().equals(JsonToken.START_ARRAY)) {
+            if (!(Objects.equals(parser.currentName(), name)
+                    && parser.currentToken() == JsonToken.START_ARRAY)
+                    && !(Objects.equals(parser.nextFieldName(), name)
+                    && parser.nextToken() == JsonToken.START_ARRAY)) {
                 throw new JsonParseException(parser, "Expected array with name: " + name);
             }
             Object value = delegate == null
