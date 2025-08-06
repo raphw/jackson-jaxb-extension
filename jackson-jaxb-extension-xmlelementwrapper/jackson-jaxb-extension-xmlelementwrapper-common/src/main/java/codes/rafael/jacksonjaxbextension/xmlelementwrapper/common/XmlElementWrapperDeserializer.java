@@ -30,10 +30,10 @@ class XmlElementWrapperDeserializer extends BeanDeserializer {
             PropertyName name = resolver.apply(property.getMember());
             if (name != null) {
                 alive = true;
-                beanProperties = beanProperties.withProperty(property.withName(name).withValueDeserializer(new ValueDeserializer(
-                        property.getName(),
-                        property.getValueDeserializer(),
-                        property.getType()
+                beanProperties.replace(property, property.withName(name).withValueDeserializer(new ValueDeserializer(
+                    property.getName(),
+                    property.getValueDeserializer(),
+                    property.getType()
                 )));
             }
         }
