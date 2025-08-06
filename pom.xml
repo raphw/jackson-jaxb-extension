@@ -24,20 +24,11 @@
     <description>This library offers modules for supporting the XmlSeeAlso and XmlElementWrapper annotations when using Jackson.</description>
     <url>https://github.com/raphw/jackson-jaxb-extension</url>
 
-    <distributionManagement>
-        <repository>
-            <id>central</id>
-            <name>Nexus Release Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-    </distributionManagement>
-
     <scm>
         <connection>scm:git:git://github.com/raphw/jackson-jaxb-extension.git</connection>
         <developerConnection>scm:git:git@github.com:raphw/jackson-jaxb-extension.git</developerConnection>
         <url>http://github.com/raphw/jackson-jaxb-extension/tree/master</url>
-      <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <developers>
         <developer>
@@ -135,6 +126,17 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.7.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <autoPublish>true</autoPublish>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
