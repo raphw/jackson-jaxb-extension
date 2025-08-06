@@ -31,7 +31,7 @@ Depending on the chosen representation, Jackson would then render two different 
     {"value": ["first", "second"]}
     {"values": {"value": ["first", "second"]}}
 
-Jackson cannot marshal or unmarshal these representation to each other, despite the JAXB specification defining them to represent an identical structure. With the `XmlElementWrapperModule`, this capability is added to Jackson. If `serialization` is set to `true`, Jackson will always add the wrapper element to the JSON when creating a serialized representation. Without it, only deserializing capabilities are added such that both representations can be read.
+Jackson cannot marshal or unmarshal these representation to each other, despite the JAXB specification defining them to represent an identical structure. With the `XmlElementWrapperModule`, this capability is added to Jackson. The module allows to disable wrapping for serialization and deserialization selectively.
 
 `XmlSeeAlso`
 ====

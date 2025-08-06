@@ -14,8 +14,10 @@ import com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 class XmlElementWrapperDeserializer extends BeanDeserializer {
 
@@ -25,7 +27,9 @@ class XmlElementWrapperDeserializer extends BeanDeserializer {
 
     XmlElementWrapperDeserializer(BeanDeserializer source, Function<AnnotatedMember, PropertyName> resolver) {
         super(source);
-        BeanPropertyMap beanProperties = _beanProperties;
+        BeanPropertyMap beanProperties = _beanProperties.withoutProperties(Arrays.stream(_beanProperties.getPropertiesInInsertionOrder())
+            .map(SettableBeanProperty::getName)
+                .collect(Collectors.toSet()));
         for (SettableBeanProperty property : _beanProperties.getPropertiesInInsertionOrder()) {
             PropertyName name = resolver.apply(property.getMember());
             if (name != null) {
@@ -35,7 +39,8 @@ class XmlElementWrapperDeserializer extends BeanDeserializer {
                     property.getValueDeserializer(),
                     property.getType()
                 )));
-                beanProperties.remove(property);
+            } else {
+                beanProperties = beanProperties.withProperty(property);
             }
         }
         this.beanProperties = beanProperties;
