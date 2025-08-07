@@ -4,7 +4,7 @@
     <parent>
         <groupId>codes.rafael.jacksonjaxbextension</groupId>
         <artifactId>jackson-jaxb-extension-xmlseealso</artifactId>
-        <version>1.10</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
 
     <name>Extensions for supporting JAXB annotations in Jackson (XmlSeeAlso, Jakarta)</name>
