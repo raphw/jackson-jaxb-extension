@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class JavaxXmlElementWrapperModuleTest {
     @Test
@@ -38,6 +39,15 @@ public class JavaxXmlElementWrapperModuleTest {
         assertEquals(
                 Collections.emptyList(),
                 objectMapper.readValue("{\"values\":{\"value\":[]}}", WithXewPlugin.class).getValue());
+    }
+
+    @Test
+    public void testXmlElementWrapperNull() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new JavaxXmlElementWrapperModule())
+                .registerModule(new JaxbAnnotationModule());
+        assertNull(objectMapper.readValue("{\"values\":{\"value\":null}}", WithXewPlugin.class).getValue());
+        assertNull(objectMapper.readValue("{\"values\":null}", WithXewPlugin.class).getValue());
     }
 
     @Test
